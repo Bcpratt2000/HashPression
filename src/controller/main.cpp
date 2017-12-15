@@ -15,16 +15,25 @@ int main() {
 
 	HashPressionController compressor = HashPressionController();
 	string fileToRead = "src/WallOfText.txt";
+	string text;
 
-	string text = compressor.compress(Util::readFile(fileToRead), 3);
+	srand(time(NULL));
 
-	MetaData data = MetaData(text);
+//	text = compressor.compress(Util::readFile(fileToRead), 128);
 
-	cout << data.getBlocksize() << endl;
+//	MetaData data = MetaData(text);
+	string l;
+	while(true){
+		l = to_string(rand());
+	text = Util::unsignedLongToString(Util::hash(l));
 
 	Util::writeFile("src/out.txt", text);
+	}
 
-	cout << text << endl;
+	cout <<"Test"<< endl;
+
+//	cout << text << endl;
+
 
 	return 0;
 }
