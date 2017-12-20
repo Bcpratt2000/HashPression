@@ -9,15 +9,14 @@
 
 MetaData::MetaData(const string compressedData) {
 	this->compressedData = compressedData;
-	this->compressedDataArr = compressedData.data();
 	// TODO Auto-generated constructor stub
 
 }
 
-string MetaData::makeMetaData(unsigned int blockSize, unsigned int numOfBlocks, unsigned int amountOfPadding, unsigned int uniqueCharacters, char characterSet[]) {
+string MetaData::makeMetaData(unsigned int blocksize, unsigned int numOfBlocks, unsigned int amountOfPadding, unsigned int uniqueCharacters, char characterSet[]) {
 	string stringBuffer = "";
 
-	stringBuffer+=Util::unsignedIntToString(blockSize);
+	stringBuffer+=Util::unsignedIntToString(blocksize);
 	stringBuffer+=Util::unsignedIntToString(numOfBlocks);
 	stringBuffer+=Util::unsignedIntToString(amountOfPadding);
 	stringBuffer+=Util::unsignedIntToString(uniqueCharacters);
@@ -28,22 +27,29 @@ string MetaData::makeMetaData(unsigned int blockSize, unsigned int numOfBlocks, 
 	return stringBuffer;
 }
 
-int MetaData::getBlocksize() {
-	int* retBuffer;
-	memcpy(retBuffer, &compressedDataArr, 4);
-	return *retBuffer;
+unsigned int MetaData::getBlocksize() {
+	unsigned int retBuffer = 0;
+	memcpy(&retBuffer, compressedData.data(), 4);
+	return retBuffer;
 }
-int MetaData::getNumOfBlocks() {
-	return (int) compressedDataArr[2];
+
+unsigned int MetaData::getNumOfBlocks() {
+	unsigned int retBuffer = 0;
+	memcpy(&retBuffer, compressedData.data()+4, 4);
+	return retBuffer;
 }
-int MetaData::getAmountPadding() {
-	return (int) compressedDataArr[4];
+unsigned int MetaData::getAmountPadding() {
+	unsigned int retBuffer = 0;
+	memcpy(&retBuffer, compressedData.data()+8, 4);
+	return retBuffer;
 }
-int MetaData::getAmountUniqueCharacters() {
-	return (int) compressedDataArr[6];
+unsigned int MetaData::getAmountUniqueCharacters() {
+	unsigned int retBuffer = 0;
+	memcpy(&retBuffer, compressedData.data()+12, 4);
+	return retBuffer;
 }
 string MetaData::getCharacterSet() {
-	return compressedData.substr(8);
+	return compressedData.substr(16, getAmountUniqueCharacters());
 }
 
 MetaData::~MetaData() {

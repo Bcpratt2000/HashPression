@@ -13,6 +13,7 @@
 #include <vector>
 #include <sstream>
 #include <mutex>
+#include <cmath>
 
 #ifndef MODEL_UTIL_H_
 #define MODEL_UTIL_H_
@@ -32,6 +33,8 @@ public:
 	static int isInCharVector(vector<char>&, char);
 	static string unsignedLongToString(unsigned long);
 	static string unsignedIntToString(unsigned int);
+	static string decompressBlock(string);
+	static string deHash(unsigned long&, const char*, int, int);
 private:
 
 };

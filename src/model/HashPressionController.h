@@ -19,8 +19,8 @@ class HashPressionController {
 public:
 	HashPressionController();
 	virtual ~HashPressionController();
-	string compress(string, unsigned int);
-	string deconmpress(string&);
+	string compress(string&, unsigned int);
+	string decompress(string&);
 };
 
 

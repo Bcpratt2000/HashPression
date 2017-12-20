@@ -22,13 +22,12 @@ public:
 	MetaData(const string);
 	virtual ~MetaData();
 	static string makeMetaData(unsigned int blockSize, unsigned int numOfBlocks, unsigned int amountOfPadding, unsigned int uniqueCharacters, char characterSet[]);
-	int getBlocksize();
-	int getNumOfBlocks();
-	int getAmountPadding();
-	int getAmountUniqueCharacters();
+	unsigned int getBlocksize();
+	unsigned int getNumOfBlocks();
+	unsigned int getAmountPadding();
+	unsigned int getAmountUniqueCharacters();
 	string getCharacterSet();
 private:
-	const char* compressedDataArr;
 	string compressedData;
 };
 
