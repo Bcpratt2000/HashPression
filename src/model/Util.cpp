@@ -23,31 +23,40 @@ int Util::isInCharVector(vector<char>& vect, char character) {
 
 unsigned long Util::hash(string input) {
 	unsigned long retBuffer = 0;
-	for (unsigned int i = 0; i < 8 * input.size() ; i++) {
+	for (unsigned int i = 0; i < 8 * input.size(); i++) {
 		retBuffer += ((input[i % input.size()] ^ input[(i + 1) % input.size()]) * i * 100109) + input[retBuffer % input.size()];
 	}
 	return retBuffer;
 
 }
 
-string Util::deHash(unsigned long hash, const char* characterSet, int characterSetLength, int blockSize) {
+string Util::deHash(unsigned long hash, const char* characterSet, unsigned int characterSetLength, unsigned int blockSize) {
 	string strBuffer = "";
-	int index = 0;
 
-	for (unsigned long i = 0; i < pow(characterSetLength, blockSize); i) {
-		index++;
-		for (int x = 0; x < blockSize; x++) {
-			srand(index*(x+1));
-			strBuffer += characterSet[rand() % characterSetLength];
+	unsigned int characterIndexInArray[blockSize];
+	for(unsigned int i = 0; i<blockSize; i++){
+		characterIndexInArray[i] = 0;
+	}
+
+	for (unsigned long i = 0; i < pow(characterSetLength, blockSize); i++) {
+		for (unsigned int x = 0; x < blockSize; x++) {
+			strBuffer += characterSet[characterIndexInArray[x]];
 		}
+		characterIndexInArray[0]++;
+		for (unsigned int x = 0; x < blockSize; x++) {
+			if (characterIndexInArray[x] >= characterSetLength) {
+				characterIndexInArray[x + 1]++;
+				characterIndexInArray[x] = 0;
+			}
+		}
+
 		if (Util::hash(strBuffer) == hash) {
 			return strBuffer;
 		}
 		strBuffer = "";
 	}
 	cout << "Unable to deHash" << endl;
-	exit(1);
-	return 0;
+	return "";
 }
 
 int Util::countOccurences(string& sample, string pattern) {

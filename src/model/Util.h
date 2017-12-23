@@ -34,7 +34,7 @@ public:
 	static string unsignedLongToString(unsigned long);
 	static string unsignedIntToString(unsigned int);
 	static string decompressBlock(string);
-	static string deHash(unsigned long, const char*, int, int);
+	static string deHash(unsigned long, const char*, unsigned int, unsigned int);
 private:
 
 };
