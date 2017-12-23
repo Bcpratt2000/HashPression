@@ -18,8 +18,13 @@ string HashPressionController::compress(string& input, unsigned int blockSize) {
 	const char * inputArr = input.data();
 	vector<char> uniqueCharacters;
 
-	//store all unique characters in a vector
+	//add padding to the end
+	while (input.size() % blockSize) {
+		input += " ";
+		amountOfPadding++;
+	}
 
+	//store all unique characters in a vector
 	cout << "Finding Unique Characters..." << endl;
 	for (unsigned long long i = 0; i < input.size(); i++) {
 		if (!Util::isInCharVector(uniqueCharacters, inputArr[i])) {
@@ -32,11 +37,6 @@ string HashPressionController::compress(string& input, unsigned int blockSize) {
 
 	cout << "Found all unique characters" << endl;
 
-	//add padding to the end
-	while (input.size() % blockSize) {
-		input += " ";
-		amountOfPadding++;
-	}
 
 	//append meta data to the return buffer
 	retBuffer += MetaData::makeMetaData(blockSize, numOfBlocks, amountOfPadding, uniqueCharacters.size(), uniqueCharacters.data());
@@ -60,9 +60,8 @@ string HashPressionController::decompress(string& input) {
 	unsigned int numOfBlocks = meta.getNumOfBlocks();
 	unsigned int amountOfPadding = meta.getAmountPadding();
 	unsigned int uniqueCharacterLength = meta.getAmountUniqueCharacters();
-	const char * uniqueCharacters = meta.getCharacterSet().data();
 
-	string uncompressedBlocks[numOfBlocks];
+	string decompressedBlocks[numOfBlocks];
 	string retBuffer;
 	string tempStr;
 	unsigned long tempLong;
@@ -71,12 +70,17 @@ string HashPressionController::decompress(string& input) {
 	for(unsigned int i = 0; i<numOfBlocks; i++){
 
 		tempStr = input.substr(16+uniqueCharacterLength+(i * 8), 8);
-		memcpy(&tempLong, &tempStr, 8);
+		memcpy(&tempLong, tempStr.data(), 8);
+		decompressedBlocks[i] = Util::deHash(tempLong, meta.getCharacterSet().data(), uniqueCharacterLength, blockSize);
 
-		cout << tempLong << endl;
-		uncompressedBlocks[i] = Util::deHash(tempLong, uniqueCharacters, uniqueCharacterLength, blockSize);
-		cout << uncompressedBlocks[i] << endl;
+		cout << i+1 << "/" << numOfBlocks << endl;
 	}
+
+	for(unsigned int i = 0; i < numOfBlocks; i++){
+		retBuffer+=decompressedBlocks[i];
+	}
+
+	retBuffer = retBuffer.substr(0, retBuffer.size()-amountOfPadding);
 
 	return retBuffer;
 }

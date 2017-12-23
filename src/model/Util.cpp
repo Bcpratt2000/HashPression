@@ -21,27 +21,25 @@ int Util::isInCharVector(vector<char>& vect, char character) {
 	return 0;
 }
 
-unsigned long Util::hash(string& input) {
+unsigned long Util::hash(string input) {
 	unsigned long retBuffer = 0;
-			const char * inputArr = input.data();
-			for(int i = 0; i<8*input.size(); i++){
-				retBuffer += ( inputArr[i%input.size()] ^ inputArr[(i+1)%input.size()] ) * i*100109;
-				retBuffer += inputArr[i];
-			}
-			return retBuffer;
+	for (unsigned int i = 0; i < 8 * input.size() ; i++) {
+		retBuffer += ((input[i % input.size()] ^ input[(i + 1) % input.size()]) * i * 100109) + input[retBuffer % input.size()];
+	}
+	return retBuffer;
 
 }
 
-string Util::deHash(unsigned long& hash, const char * characterSet, int characterSetLength, int blockSize) {
+string Util::deHash(unsigned long hash, const char* characterSet, int characterSetLength, int blockSize) {
 	string strBuffer = "";
 	int index = 0;
+
 	for (unsigned long i = 0; i < pow(characterSetLength, blockSize); i) {
 		index++;
 		for (int x = 0; x < blockSize; x++) {
 			srand(index*(x+1));
 			strBuffer += characterSet[rand() % characterSetLength];
 		}
-//		cout << strBuffer << endl;
 		if (Util::hash(strBuffer) == hash) {
 			return strBuffer;
 		}
@@ -63,7 +61,7 @@ int Util::countOccurences(string& sample, string pattern) {
 	return count;
 }
 
-string Util::readFile(string& file) {
+string Util::readFile(string file) {
 	string strBuffer = "";
 
 	std::ifstream fileStream;

@@ -15,14 +15,13 @@ using namespace std;
 int main() {
 
 	HashPressionController compressor = HashPressionController();
-	string fileToRead = "src/WallOfText.txt";
+
 	string text;
-	cout << "Loading File " << fileToRead << endl;
-	string rawText = Util::readFile(fileToRead);
-	fileToRead = "";
+	string rawText = Util::readFile("src/WallOfText.txt");
+
 	cout << "File Loaded, Compressing..." << endl;
 
-	text = compressor.compress(rawText, 2);
+	text = compressor.compress(rawText, 3);
 
 	MetaData data = MetaData(text);
 
@@ -48,9 +47,11 @@ int main() {
 
 	string decompressedText = compressor.decompress(text);
 
+	cout << "Writing to File" << endl;
+
 	Util::writeFile("src/out.txt", decompressedText);
 
-//	string toHash = "Hello";
+//	string toHash = "Hello world";
 //	unsigned long hash = Util::hash(toHash);
 //	vector<char> uniqueCharacters;
 //		for (unsigned long long i = 0; i < toHash.size(); i++) {
